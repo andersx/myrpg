@@ -9,7 +9,8 @@ from random import randint, choice
 
 from settings import *
 
-from monsters import Creep
+from monsters import Monster
+from characters import Character
 
 
 def quit_game():
@@ -27,7 +28,7 @@ class World():
         monsters = []
 
         for i in range(number):
-            monsters.append(Creep(screen,"src/graphics/badguy1.png",
+            monsters.append(Monster(screen,"src/graphics/badguy1.png",
                             (   randint(0, SCREEN_WIDTH),
                                 randint(0, SCREEN_HEIGHT)),
                             (   choice([-1, 1]),
@@ -36,7 +37,7 @@ class World():
 
     def init_char(self, screen):
 
-        return Creep(screen,"src/graphics/goodguy.png",
+        return Character(screen,"src/graphics/goodguy.png",
                             (   int(SCREEN_WIDTH/2),
                                 int(SCREEN_HEIGHT/2)),
                             (   choice([-1, 1]),
@@ -44,20 +45,32 @@ class World():
 
 
 
-    def update_char(self, time_passed):
+    def _update_char(self, time_passed):
         self.char.update(time_passed)
 
-    def redraw_char(self):
+    def _redraw_char(self):
         self.char.blitme()
 
-    def update_monsters(self, time_passed):
+    def _update_monsters(self, time_passed):
         for monster in self.monsters:
             monster.update(time_passed)
 
-    def redraw_monsters(self):
+    def _redraw_monsters(self):
         for monster in self.monsters:
             #monster.update(time_passed)
             monster.blitme()
+
+    def update(self, time_passed):
+        self._update_monsters(time_passed)
+        #self._update_char(time_passed)
+
+    def redraw(self, screen):
+        screen.fill(BG_COLOR)
+
+        self._redraw_monsters()
+        self._redraw_char()
+
+        pygame.display.flip()
 
 
 def run_game():
@@ -80,21 +93,10 @@ def run_game():
                 exit_game()
         # Redraw the background
 
-        screen.fill(BG_COLOR)
 
 
-        world.update_monsters(time_passed)
-        world.redraw_monsters()
-        world.update_char(time_passed)
-        world.redraw_char()
-
-
-        ## Update and redraw all creeps
-        #for creep in world.monsters:
-        #    creep.update(time_passed)
-        #    creep.blitme()
-
-        pygame.display.flip()
+        world.update(time_passed)
+        world.redraw(screen)
 
 
 def exit_game():

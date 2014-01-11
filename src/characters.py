@@ -8,7 +8,7 @@ from pygame.sprite import Sprite
 from vec2d import vec2d
 
 
-class Monster(Sprite):
+class Character(Sprite):
     """ A creep sprite that bounces off walls and changes its
         direction from time to time.
     """
@@ -52,6 +52,7 @@ class Monster(Sprite):
         #
         self.pos = vec2d(init_position)
 
+        self.image_w, self.image_h = self.image.get_size()
         # The direction is a normalized vector
         #
         self.direction = vec2d(init_direction).normalized()
