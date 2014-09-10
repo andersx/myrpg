@@ -11,17 +11,21 @@ from vec2d import vec2d
 
 
 
-
 class Character(Sprite):
+
+    # Whether berserker mode 
+    berserk = False
+
+    color_key = 7
 
     def __init__(self, color="red"):
 
         if color == "red":
-            color_key = 4
+            self.color_key = 4
         elif color == "blue":
-            color_key = 2
+            self.color_key = 2
         else:
-            color_key = 7
+            self.color_key = 7
 
 
         Sprite.__init__(self)
@@ -29,10 +33,10 @@ class Character(Sprite):
         self.char_sprites = spritesheet("src/graphics/sheets/demons.png")
 
 
-        self.image_down  = self.char_sprites.get_img(color_key, 4)
-        self.image_left  = self.char_sprites.get_img(color_key, 5)
-        self.image_right = self.char_sprites.get_img(color_key, 6)
-        self.image_up    = self.char_sprites.get_img(color_key, 7)
+        self.image_down  = self.char_sprites.get_img(self.color_key, 4)
+        self.image_left  = self.char_sprites.get_img(self.color_key, 5)
+        self.image_right = self.char_sprites.get_img(self.color_key, 6)
+        self.image_up    = self.char_sprites.get_img(self.color_key, 7)
 
         self.image = self.image_up
 
@@ -43,12 +47,30 @@ class Character(Sprite):
     def update(self, time_passed):
         return
 
-    def react_keyboard(self, key):
-        if key[pygame.K_1]:
+    
+    def _toggle_berserk(self):
+
+        if not self.berserk:
             self.image_down  = self.char_sprites.get_img(1, 0)
             self.image_left  = self.char_sprites.get_img(1, 1)
             self.image_right = self.char_sprites.get_img(1, 2)
             self.image_up    = self.char_sprites.get_img(1, 3)
+
+            self.berserk = True
+
+        else:
+            self.image_down  = self.char_sprites.get_img(self.color_key, 4)
+            self.image_left  = self.char_sprites.get_img(self.color_key, 5)
+            self.image_right = self.char_sprites.get_img(self.color_key, 6)
+            self.image_up    = self.char_sprites.get_img(self.color_key, 7)
+
+            self.berserk = False
+
+        return
+
+    def react_keyboard(self, key):
+        if key[pygame.K_1]:
+            self._toggle_berserk()
 
     def react_mouse(self, mouse_pos):
 
@@ -64,7 +86,6 @@ class Character(Sprite):
                 self.image = self.image_left
             else:
                 self.image = self.image_right
-                
 
         return
 

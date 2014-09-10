@@ -1,3 +1,4 @@
+#!/usr/bin/python
 from src.main import run_game
 
 if __name__ == "__main__":
